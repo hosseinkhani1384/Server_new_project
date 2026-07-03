@@ -32,8 +32,7 @@ app.get("/", (req, res) => {
 
 const startServer = async () => {
   try {
-    const dbUrl =
-      process.env.MONGODB_URI || process.env.MONGO_URL || process.env.URL;
+    const dbUrl = process.env.URL;
 
     if (!dbUrl) {
       throw new Error(
