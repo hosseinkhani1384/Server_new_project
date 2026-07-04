@@ -26,7 +26,7 @@ async function Register(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
     res.status(201).json({
@@ -73,7 +73,7 @@ async function Login(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
     res.status(200).json({
@@ -134,7 +134,7 @@ async function logout(req, res) {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
     });
 
