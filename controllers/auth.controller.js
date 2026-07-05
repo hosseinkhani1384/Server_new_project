@@ -1,6 +1,14 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const toShamsi = (date) => {
+  if (!date) return '---';
+  return new Intl.DateTimeFormat('fa-IR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(date));      
+};
 async function Register(req, res) {
   try {
     const userdata = req.body;
@@ -15,10 +23,22 @@ async function Register(req, res) {
       password: hashPassword,
       username: userdata.username,
       email: userdata.email,
+      imageUrl: "",
     });
-    console.log("Register New User => ",newUser)
+    const avatar = `https://api.dicebear.com/10.x/bottts-neutral/svg?seed=${newUser._id}`;
+    const fixUserImg = await User.findByIdAndUpdate(
+      newUser._id,
+      { imageUrl: avatar },
+      { new: true },
+    );
+    console.log("Register New User => ", newUser);
     const token = jwt.sign(
-      { userid: newUser._id, username: newUser.username, email: newUser.email },
+      {
+        userid: fixUserImg._id,
+        username: fixUserImg.username,
+        email: fixUserImg.email,
+        imageUrl: fixUserImg.imageUrl,
+      },
       process.env.SECRET_KEY,
       {
         expiresIn: "1h",
@@ -33,9 +53,10 @@ async function Register(req, res) {
     res.status(201).json({
       message: "",
       user: {
-        userid: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
+        username: fixUserImg.username,
+        email: fixUserImg.email,
+        imageUrl: fixUserImg.imageUrl,
+        dateCreate : toShamsi(fixUserImg.createdAt)
       },
     });
   } catch (error) {
@@ -65,6 +86,7 @@ async function Login(req, res) {
         userid: findUser._id,
         username: findUser.username,
         email: findUser.email,
+        imageUrl: findUser.imageUrl,
       },
       process.env.SECRET_KEY,
       {
@@ -77,12 +99,14 @@ async function Login(req, res) {
       sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
+    console.log(toShamsi(fixUserImg.createdAt)  )
     res.status(200).json({
       message: "",
       user: {
-        userid: findUser._id,
         username: findUser.username,
         email: findUser.email,
+        imageUrl: findUser.imageUrl,
+        dateCreate : toShamsi(findUser.createdAt)
       },
     });
   } catch (error) {
@@ -118,9 +142,10 @@ async function checkAuth(req, res) {
 
     res.status(200).json({
       user: {
-        id: user._id,
         username: user.username,
         email: user.email,
+        imageUrl: user.imageUrl,
+        dateCreate : toShamsi(user.createdAt)
       },
     });
   } catch (error) {
@@ -148,4 +173,4 @@ async function logout(req, res) {
     });
   }
 }
-module.exports = { Register, Login, checkAuth , logout};
+module.exports = { Register, Login, checkAuth, logout };
