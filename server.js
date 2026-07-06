@@ -28,6 +28,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.set('trust proxy', 1); 
 app.use("/api/auth", apiRouter);
 app.use("/api/user", authorizationUser ,userRouter);
 

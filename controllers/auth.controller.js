@@ -66,6 +66,7 @@ async function Login(req, res) {
   try {
     const userdata = req.body;
     const findUser = await User.findOne({ email: userdata.email });
+    console.log(req.ip)
     if (!findUser) {
       return res.status(404).json({
         error: "there is no user with this email",
