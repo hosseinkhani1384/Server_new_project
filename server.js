@@ -27,13 +27,7 @@ app.use(
   })
 );
 
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
-    contentSecurityPolicy: false,
-  })
-);
+
 app.use(express.json());
 app.use(cookieParser());
 app.set('trust proxy', 1); 
