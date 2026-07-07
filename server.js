@@ -13,7 +13,23 @@ const { authorizationUser } = require("./middleware/user.middleware");
 const app = express();
 const port = process.env.PORT || 2000;
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://www.hosseinkhani20.ir",
+    "https://hosseinkhani20.ir",
+    "https://new-project-mu-ten.vercel.app",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// اعمال CORS به همه مسیرها
+app.use(cors(corsOptions));
+
+// 2. مدیریت اختصاصی درخواست‌های OPTIONS (برای اطمینان بیشتر)
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());
