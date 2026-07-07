@@ -24,6 +24,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://www.hosseinkhani20.ir",
+      "https://api.hosseinkhani20.ir",
       "https://new-project-mu-ten.vercel.app",
     ],
     credentials: true,
